@@ -1,5 +1,6 @@
-import React, { Fragment } from "react"
+import React, { useState, Fragment, useEffect } from "react"
 import Planet from "./planet"
+import Form from "./form"
 
 //consome api
 
@@ -9,64 +10,65 @@ async function getPlanets() {
     return data
 }
 
-getPlanets()
-
-class Planets extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            planets: [
-            
-            ]
-
-        }
-    }
-
-    componentDidMount() {
-        getPlanets().then((data) => {
-            this.setState(state => ({
-                planets: data["planets"]
-            }))
-        })
-    }
 
 
-    removeLast = () => {
-        let new_planets = [...this.state.planets]
+//LIFECYCLE PADRÃO-CLÁSSICO
+// componentDidMount() {
+//     getPlanets().then((data) => {
+//         setState(state => ({
+//             planets: data["planets"]
+//         }))
+//     })
+// }   
+
+
+const Planets = () => {
+
+    const [planets, setPlanets] = useState([])
+//LIFE CYCLE MODERNO
+    useEffect(() => {
+            getPlanets().then((data) => {
+                setPlanets(data["planets"])
+            })
+    },[])
+
+    const removeLast = () => {
+        let new_planets = [...planets]
 
         new_planets.pop()
 
-        this.setState(state => ({
-            planets: new_planets
-        }))
+        setPlanets(new_planets)
     }
 
-    duplicateLastPlanet = () => {
-        let lastPlanet = this.state.planets[this.state.planets.length -1]
+    const duplicateLastPlanet = () => {
+        let last_planet = planets[planets.length - 1]
+ 
+        setPlanets([...planets,last_planet])
+    }
 
-        this.setState(state => ({
-            planets: [...this.state.planets, lastPlanet]
-        }))
+    const addPlanet = (new_planet) => {
 
+            setPlanets([...planets, new_planet])
 
-       
     }
 
 
-    render() {
-        return (
-            <Fragment>
-                <h3>
-                    Planets List
-                </h3>
-                <button onClick={this.removeLast}>Remover ultimo</button>
-                <button onClick={this.duplicateLastPlanet}>Duplicar ultimo</button>
-                <hr />
+    return (
+        <Fragment>
+            <h3>
+                Planets List
+            </h3>
+            <hr/>
+            <Form addPlanet={addPlanet}/>
+            <hr/>
+            <button onClick={removeLast}>Remover ultimo</button>
+            <button onClick={duplicateLastPlanet}>Duplicar ultimo</button>
+            <hr />
 
-                
-            {this.state.planets.map((planet,index) =>
-                <Planet 
-                    id={planet.id} 
+
+            {planets.map((planet, index) =>
+                <Planet
+                    id={planet.id}
                     name={planet.name}
                     link={planet.link}
                     title_with_underline={true}
@@ -75,15 +77,13 @@ class Planets extends React.Component {
                     url={planet.img_url}
                     key={index}
                 />
-                
+
 
             )}
-        
-            </Fragment>
-        )       
-    }
-
+        </Fragment>
+    )
 }
+
 
 
 export default Planets
