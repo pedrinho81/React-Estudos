@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react"
 import Planet from "./planet"
-import Form from "./form"
+import Form from "../planet/form"
+
 
 //consome api
 

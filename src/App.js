@@ -3,13 +3,12 @@ import PlanetList from "./components/planets"
 import {Fragment} from "react"
 import Planet from "./components/planets/planet"
 import GrayImg from "./components/shared/gray-img"
-
+import ScreenRoutes from "./routes"
 
 function App() {
   return (
     <div>
-      <PlanetList/>
-  
+      <ScreenRoutes/>
     </div>
   );
 }
